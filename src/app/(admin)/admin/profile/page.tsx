@@ -272,9 +272,16 @@ export default function AdminProfilePage() {
           payload.password = newPassword.trim();
         }
 
-        const res = await adminStaffService.updateStaffProfile(user.id, payload);
+        // Try direct user profile update endpoint first
+        let res = await adminStaffService.updateMyProfile(payload);
+        if (!res.success) {
+          // Fallback to staff role endpoint
+          res = await adminStaffService.updateStaffProfile(user.id, payload);
+        }
+
         if (res.success && res.data) {
-          loginSuccess({ ...user, ...res.data } as any, localStorage.getItem("kiddy_access_token") || "");
+          const updatedUser = res.data?.user || res.data;
+          loginSuccess({ ...user, ...updatedUser } as any, localStorage.getItem("kiddy_access_token") || "");
           toast.success("Super Admin profile and credentials successfully updated!");
           setNewPassword("");
         } else {
@@ -287,7 +294,8 @@ export default function AdminProfilePage() {
           avatarUrl: avatarUrl || undefined,
         });
         if (res.success) {
-          loginSuccess({ ...user, name: name.trim(), avatarUrl } as any, localStorage.getItem("kiddy_access_token") || "");
+          const updatedUser = res.data?.user || res.data;
+          loginSuccess({ ...user, name: name.trim(), avatarUrl, ...updatedUser } as any, localStorage.getItem("kiddy_access_token") || "");
           toast.success("Profile updated successfully!");
         } else {
           toast.error(res.message || "Failed to update profile");

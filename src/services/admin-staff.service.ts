@@ -51,9 +51,14 @@ export const adminStaffService = {
       const res = await apiClient.patch<ApiResponse<AdminStaffUser>>(`/admin/staff/${id}/role`, data);
       return res.data;
     } catch (err: any) {
+      console.error("updateStaffProfile error:", err);
       return {
         success: false,
-        message: err?.response?.data?.message || "Failed to update admin profile",
+        message:
+          err?.message ||
+          err?.response?.data?.message ||
+          err?.response?.data?.error?.message ||
+          "Failed to update admin profile",
         data: null as any,
       };
     }
