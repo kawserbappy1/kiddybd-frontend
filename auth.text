@@ -1,0 +1,20 @@
+Admin Login Portal: http://localhost:3000/admin/login
+
+--- Super Admin Account (Full Master Access & Staff Assignment) ---
+User ID / Email: admin@kiddojoy.com (or Phone: +8801700000001)
+Password: Admin@12345
+Role: SUPER_ADMIN
+Special Capability: Can assign new admins, set their User ID, Password, and Roles at /admin/staff.
+
+--- Seeded Department Managers ---
+1. Order Manager:
+User ID / Email: orders@kiddojoy.com (or Phone: +8801700000002)
+Password: Admin@12345
+Role: ORDER_MANAGER (Access: Dashboard, Orders Pipeline, Returns & RTO)
+
+2. Inventory Manager:
+User ID / Email: inventory@kiddojoy.com (or Phone: +8801700000003)
+Password: Admin@12345
+Role: INVENTORY_MANAGER (Access: Dashboard, Products Catalog, Categories, Brands, Inventory & SKUs)
+
+* Note: "Simulate Role" dropdown is completely removed. All roles and permissions are dynamically assigned by the Super Admin from the database.
