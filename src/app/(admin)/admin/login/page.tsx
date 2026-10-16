@@ -62,7 +62,9 @@ export default function AdminLoginPage() {
         toast.error(res.message || "Invalid credentials. Please verify your credentials.");
       }
     } catch (err: any) {
+      console.error("Admin login failed:", err);
       const msg =
+        err?.message ||
         err?.response?.data?.message ||
         err?.response?.data?.error?.message ||
         "Invalid credentials or unauthorized account. Please check your user ID and password.";
