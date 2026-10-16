@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { QueryProvider } from "@/components/query-provider";
 import { StorefrontShell } from "@/components/layout/storefront-shell";
 import { Toaster } from "sonner";
+import { DynamicFavicon } from "@/components/dynamic-favicon";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -105,6 +106,7 @@ export default function RootLayout({
             disableTransitionOnChange={false}
           >
             <StorefrontShell>{children}</StorefrontShell>
+            <DynamicFavicon />
             <Toaster
               position="top-center"
               richColors
