@@ -137,14 +137,15 @@ export function LiveHomeProductShelves() {
         ].slice(0, 4)
       : [...products].reverse().slice(0, 4);
 
-  // Featured Collection
+  // Featured Collection (strictly display exactly 4 cards)
   const featuredProducts = products.filter((p) => p.isFeatured);
-  const displayFeatured =
+  const displayFeatured = (
     featuredProducts.length > 0
       ? featuredProducts
       : products.length > 4
       ? products.slice(4, 8)
-      : [];
+      : products
+  ).slice(0, 4);
 
   return (
     <>
