@@ -39,6 +39,7 @@ export default function AdminSettingsPage() {
     footerContent:
       "Quality products for every stage of childhood. Because happy kids build a brighter tomorrow.",
     contactPhone: "+880 1893-590140",
+    contactPhoneSecondary: "+880 1729-993873",
     contactEmail: "kiddybd1@gmail.com",
     contactAddress: "House 12, Road 4, Block-C, Banasree, Dhaka - 1219, Bangladesh",
     socialFacebook: "https://www.facebook.com/kiddybd1",
@@ -333,7 +334,7 @@ export default function AdminSettingsPage() {
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Customer Care Hotline</span>
+                <span>Primary Contact Phone (Hotline 1)</span>
               </label>
               <Input
                 value={formData.contactPhone}
@@ -343,7 +344,24 @@ export default function AdminSettingsPage() {
                 className="h-10 text-xs rounded-xl"
               />
               <p className="text-[11px] text-slate-400">
-                Displayed in Contact Us page, footer and customer WhatsApp links.
+                Primary hotline shown in topbar, footer and WhatsApp links.
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-teal-500" />
+                <span>Secondary Contact Phone (Hotline 2)</span>
+              </label>
+              <Input
+                value={formData.contactPhoneSecondary}
+                onChange={(e) => setFormData({ ...formData, contactPhoneSecondary: e.target.value })}
+                placeholder="+880 1729-993873"
+                disabled={!isSuperAdmin}
+                className="h-10 text-xs rounded-xl"
+              />
+              <p className="text-[11px] text-slate-400">
+                Alternate support number shown in Track Order and Returns & Refunds page.
               </p>
             </div>
 
@@ -364,7 +382,7 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="sm:col-span-2 space-y-1.5">
+            <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-rose-500" />
                 <span>Store / Head Office Physical Address</span>

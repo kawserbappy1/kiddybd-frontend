@@ -18,6 +18,15 @@ import {
 
 export default function FAQPage() {
   const [openIdx, setOpenIdx] = React.useState<number | null>(0);
+  const [phone, setPhone] = React.useState("+880 1893-590140");
+
+  React.useEffect(() => {
+    import("@/services/settings.service").then(({ settingsService }) => {
+      settingsService.getSettings().then((res) => {
+        if (res.data?.contactPhone) setPhone(res.data.contactPhone);
+      });
+    });
+  }, []);
 
   const FAQS = [
     {
@@ -48,7 +57,7 @@ export default function FAQPage() {
     {
       category: "রিটার্ন ও রিফান্ড",
       q: "পণ্য ভাঙা বা ত্রুটিপূর্ণ পেলে কীভাবে পরিবর্তন বা রিটার্ন করব?",
-      a: "ডেলিভারি পাওয়ার পর পণ্যে কোনো সমস্যা থাকলে আনবক্সিং ছবি বা ভিডিওসহ আমাদের হটলাইনে বা হোয়াটসঅ্যাপে (+880 1700-000001) জানান। আমরা ৭ কার্যদিবসের মধ্যে সম্পূর্ণ ফ্রিতে রিপ্লেসমেন্ট প্রদান করব।",
+      a: `ডেলিভারি পাওয়ার পর পণ্যে কোনো সমস্যা থাকলে আনবক্সিং ছবি বা ভিডিওসহ আমাদের হটলাইনে বা হোয়াটসঅ্যাপে (${phone}) জানান। আমরা ৭ কার্যদিবসের মধ্যে সম্পূর্ণ ফ্রিতে রিপ্লেসমেন্ট প্রদান করব।`,
     },
   ];
 

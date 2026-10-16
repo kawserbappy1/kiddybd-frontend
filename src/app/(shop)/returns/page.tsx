@@ -1,6 +1,7 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
-import { Metadata } from "next";
 import {
   RotateCcw,
   ShieldCheck,
@@ -13,12 +14,24 @@ import {
   HelpCircle,
 } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "রিটার্ন ও রিফান্ড পলিসি | KiddyBD",
-  description: "KiddyBD-এর সহজ ৭ দিনের রিটার্ন এবং দ্রুত রিফান্ড নীতি সম্পর্কে বিস্তারিত জানুন।",
-};
-
 export default function ReturnsRefundsPage() {
+  const [phones, setPhones] = React.useState({
+    primary: "+880 1893-590140",
+    secondary: "+880 1729-993873",
+  });
+
+  React.useEffect(() => {
+    import("@/services/settings.service").then(({ settingsService }) => {
+      settingsService.getSettings().then((res) => {
+        if (res.data) {
+          setPhones({
+            primary: res.data.contactPhone || "+880 1893-590140",
+            secondary: res.data.contactPhoneSecondary || "+880 1729-993873",
+          });
+        }
+      });
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-[#FAFAFA] dark:bg-slate-950 py-8 sm:py-12 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
@@ -108,7 +121,7 @@ export default function ReturnsRefundsPage() {
                   সাপোর্টে জানান
                 </h3>
                 <p className="font-bengali text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  আমাদের হটলাইন বা হোয়াটসঅ্যাপে (+880 1700-000001) অর্ডার আইডিসহ মেসেজ দিন।
+                  আমাদের হটলাইন ({phones.primary}) বা হোয়াটসঅ্যাপে ({phones.secondary}) অর্ডার আইডিসহ মেসেজ দিন।
                 </p>
               </div>
 

@@ -20,6 +20,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false);
   const [settings, setSettings] = React.useState({
     contactPhone: "+880 1893-590140",
+    contactPhoneSecondary: "+880 1729-993873",
     contactEmail: "kiddybd1@gmail.com",
     contactAddress: "হাউজ ১২, রোড ৪, ব্লক-সি, বনশ্রী, ঢাকা - ১২১৯, বাংলাদেশ।",
   });
@@ -31,6 +32,7 @@ export default function ContactPage() {
           setSettings((prev) => ({
             ...prev,
             contactPhone: res.data.contactPhone || prev.contactPhone,
+            contactPhoneSecondary: res.data.contactPhoneSecondary || prev.contactPhoneSecondary,
             contactEmail: res.data.contactEmail || prev.contactEmail,
             contactAddress: res.data.contactAddress || prev.contactAddress,
           }));
@@ -100,10 +102,10 @@ export default function ContactPage() {
               <MessageCircle className="w-5 h-5" />
             </div>
             <h3 className="font-bengali font-bold text-xs text-slate-900 dark:text-white">
-              হোয়াটসঅ্যাপ চ্যাট
+              হোয়াটসঅ্যাপ চ্যাট (হটলাইন ২)
             </h3>
             <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              {settings.contactPhone}
+              {settings.contactPhoneSecondary || settings.contactPhone}
             </p>
             <p className="font-bengali text-[11px] text-slate-400">
               দ্রুত রিপ্লাই ও ২৪/৭ সহায়তা

@@ -21,6 +21,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function TrackOrderPage() {
+  const [phonePrimary, setPhonePrimary] = React.useState("+880 1893-590140");
+  const [phoneSecondary, setPhoneSecondary] = React.useState("+880 1729-993873");
+
+  React.useEffect(() => {
+    import("@/services/settings.service").then(({ settingsService }) => {
+      settingsService.getSettings().then((res) => {
+        if (res.data) {
+          if (res.data.contactPhone) setPhonePrimary(res.data.contactPhone);
+          if (res.data.contactPhoneSecondary) setPhoneSecondary(res.data.contactPhoneSecondary);
+        }
+      });
+    });
+  }, []);
+
+  const cleanWaNumber = (phoneSecondary || phonePrimary).replace(/[^0-9]/g, "");
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] dark:bg-slate-950 py-8 sm:py-12 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
@@ -157,33 +173,41 @@ export default function TrackOrderPage() {
 
         {/* Support Assistance */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950 text-[#FF3E78] flex items-center justify-center shrink-0">
+          <a
+            href={`tel:${phonePrimary.replace(/\s+/g, "")}`}
+            className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center gap-4 hover:border-primary/40 hover:shadow-md transition-all group"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950 text-[#FF3E78] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
               <PhoneCall className="w-6 h-6" />
             </div>
             <div>
               <h4 className="text-xs font-bold text-slate-900 dark:text-white font-bengali">
-                জরুরি প্রয়োজনে কল করুন
+                জরুরি প্রয়োজনে কল করুন (হটলাইন ১)
               </h4>
               <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
-                +880 1700-000001 (সকাল ৯টা - রাত ১০টা)
+                {phonePrimary} (সকাল ৯টা - রাত ১০টা)
               </p>
             </div>
-          </div>
+          </a>
 
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center shrink-0">
+          <a
+            href={`https://wa.me/${cleanWaNumber}`}
+            target="_blank"
+            rel="noreferrer"
+            className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center gap-4 hover:border-emerald-500/40 hover:shadow-md transition-all group"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
               <MessageCircle className="w-6 h-6" />
             </div>
             <div>
               <h4 className="text-xs font-bold text-slate-900 dark:text-white font-bengali">
-                হোয়াটসঅ্যাপ সাপোর্ট
+                হোয়াটসঅ্যাপ সাপোর্ট (হটলাইন ২)
               </h4>
               <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
-                +880 1700-000001 (২৪/৭ চ্যাট সাপোর্ট)
+                {phoneSecondary || phonePrimary} (২৪/৭ চ্যাট সাপোর্ট)
               </p>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
