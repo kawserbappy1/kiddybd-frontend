@@ -459,7 +459,7 @@ export default function AdminProfilePage() {
                 {/* Email / User ID */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Email / Admin User ID {isSuperAdmin ? "" : "(Fixed)"}
+                    Email / Admin User ID {isSuperAdmin ? "(Super Admin Editable)" : "(Fixed by Super Admin)"}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -478,7 +478,7 @@ export default function AdminProfilePage() {
                 {/* Phone Number */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Phone Number {isSuperAdmin ? "" : "(Fixed)"}
+                    Phone Number {isSuperAdmin ? "(Super Admin Editable)" : "(Fixed by Super Admin)"}
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
