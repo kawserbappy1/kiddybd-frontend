@@ -57,6 +57,7 @@ export interface User {
   name?: string | null;
   role: Role;
   avatarUrl?: string | null;
+  status?: "ACTIVE" | "SUSPENDED" | "BLOCKED" | "DELETED";
   phoneVerifiedAt?: string | null;
   emailVerifiedAt?: string | null;
   createdAt: string;

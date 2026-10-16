@@ -30,6 +30,7 @@ import {
   Ticket,
   Shield,
   KeyRound,
+  User,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useAdminNotificationStore } from "@/stores/use-admin-notification-store";
@@ -301,6 +302,7 @@ export function AcmeAdminSidebar({ mobileOpen = false, onCloseMobile }: AcmeAdmi
             <DropdownMenuTrigger asChild>
               <button className="flex w-full items-center gap-3 rounded-lg p-1.5 text-left text-sm transition-colors hover:bg-accent/50 focus:outline-hidden">
                 <Avatar className="h-8 w-8 rounded-lg border border-border">
+                  <AvatarImage src={user?.avatarUrl || ""} alt={user?.name || "Admin"} className="object-cover" />
                   <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-bold text-xs">
                     {getInitials(user?.name)}
                   </AvatarFallback>
@@ -326,6 +328,11 @@ export function AcmeAdminSidebar({ mobileOpen = false, onCloseMobile }: AcmeAdmi
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/admin/profile" className="gap-2 cursor-pointer font-medium">
+                  <User className="h-4 w-4 text-primary" /> My Profile & Activity
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="gap-2 cursor-pointer"

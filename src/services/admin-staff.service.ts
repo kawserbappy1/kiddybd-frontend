@@ -35,26 +35,62 @@ export const adminStaffService = {
     }
   },
 
+  async updateStaffProfile(
+    id: string,
+    data: {
+      role?: AdminRole;
+      status?: "ACTIVE" | "SUSPENDED" | "BLOCKED";
+      name?: string;
+      email?: string;
+      phone?: string;
+      password?: string;
+      avatarUrl?: string;
+    }
+  ): Promise<ApiResponse<AdminStaffUser>> {
+    try {
+      const res = await apiClient.patch<ApiResponse<AdminStaffUser>>(`/admin/staff/${id}/role`, data);
+      return res.data;
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err?.response?.data?.message || "Failed to update admin profile",
+        data: null as any,
+      };
+    }
+  },
+
   async updateStaffRole(
     id: string,
     role: AdminRole,
     status?: "ACTIVE" | "SUSPENDED" | "BLOCKED",
     password?: string
   ): Promise<ApiResponse<AdminStaffUser>> {
+    return this.updateStaffProfile(id, { role, status, password });
+  },
+
+  async updateMyProfile(data: { name?: string; avatarUrl?: string }): Promise<ApiResponse<any>> {
     try {
-      const res = await apiClient.patch<ApiResponse<AdminStaffUser>>(`/admin/staff/${id}/role`, {
-        role,
-        status,
-        password,
-      });
+      const res = await apiClient.patch<ApiResponse<any>>("/users/profile", data);
       return res.data;
     } catch (err: any) {
       return {
         success: false,
-        message: err?.response?.data?.message || "Failed to update admin role",
+        message: err?.response?.data?.message || "Failed to update profile",
         data: null as any,
       };
     }
+  },
+
+  async uploadAvatar(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await apiClient.post<ApiResponse<{ url: string }>>("/upload?folder=avatars", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (res.data.data?.url) {
+      return res.data.data.url;
+    }
+    throw new Error(res.data.message || "Failed to upload image to Cloudinary");
   },
 
   async getAuditLogs(params?: {

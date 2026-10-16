@@ -16,7 +16,11 @@ import {
   BadgeCheck,
   Ban,
   UserCheck,
+  Edit,
+  Camera,
+  Loader2,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { adminStaffService } from "@/services/admin-staff.service";
 import { useAuthStore } from "@/stores/use-auth-store";
@@ -95,6 +99,55 @@ export default function AdminStaffManagementPage() {
   const [resetTargetUser, setResetTargetUser] = React.useState<AdminStaffUser | null>(null);
   const [newPassword, setNewPassword] = React.useState("");
   const [isResetting, setIsResetting] = React.useState(false);
+
+  // Full Admin Edit dialog state (Super Admin privilege)
+  const [editTargetUser, setEditTargetUser] = React.useState<AdminStaffUser | null>(null);
+  const [editFormData, setEditFormData] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "ORDER_MANAGER" as AdminRole,
+    status: "ACTIVE" as "ACTIVE" | "SUSPENDED" | "BLOCKED",
+    avatarUrl: "",
+  });
+  const [isEditingSaving, setIsEditingSaving] = React.useState(false);
+  const [isAvatarUploading, setIsAvatarUploading] = React.useState(false);
+
+  const openEditModal = (staff: AdminStaffUser) => {
+    setEditTargetUser(staff);
+    setEditFormData({
+      name: staff.name,
+      email: staff.email || "",
+      phone: staff.phone || "",
+      role: staff.role,
+      status: (staff.status === "DELETED" ? "BLOCKED" : staff.status) as any,
+      avatarUrl: staff.avatarUrl || "",
+    });
+  };
+
+  const handleSaveStaffEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editTargetUser) return;
+
+    setIsEditingSaving(true);
+    const res = await adminStaffService.updateStaffProfile(editTargetUser.id, {
+      name: editFormData.name.trim(),
+      email: editFormData.email.trim(),
+      phone: editFormData.phone.trim() || undefined,
+      role: editFormData.role,
+      status: editFormData.status,
+      avatarUrl: editFormData.avatarUrl || undefined,
+    });
+    setIsEditingSaving(false);
+
+    if (res.success) {
+      toast.success(`Admin member "${editFormData.name}" updated successfully!`);
+      setEditTargetUser(null);
+      loadData();
+    } else {
+      toast.error(res.message || "Failed to update admin profile");
+    }
+  };
 
   const loadData = React.useCallback(async () => {
     setIsLoading(true);
@@ -505,17 +558,27 @@ export default function AdminStaffManagementPage() {
 
                     return (
                       <tr key={staff.id} className="hover:bg-muted/30 transition-colors">
-                        {/* Member Name & Email */}
+                        {/* Member Name, Avatar & Email */}
                         <td className="py-3 px-4">
-                          <div className="font-bold text-foreground">{staff.name}</div>
-                          <div className="text-[11px] text-muted-foreground">
-                            {staff.email || "No email"}
-                          </div>
-                          {staff.phone && (
-                            <div className="text-[10px] text-muted-foreground font-mono">
-                              {staff.phone}
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9 rounded-xl border border-border shrink-0">
+                              <AvatarImage src={staff.avatarUrl || ""} alt={staff.name} className="object-cover" />
+                              <AvatarFallback className="rounded-xl text-xs font-bold bg-primary/10 text-primary">
+                                {staff.name.slice(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0">
+                              <div className="font-bold text-foreground truncate">{staff.name}</div>
+                              <div className="text-[11px] text-muted-foreground truncate">
+                                {staff.email || "No email"}
+                              </div>
+                              {staff.phone && (
+                                <div className="text-[10px] text-muted-foreground font-mono">
+                                  {staff.phone}
+                                </div>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </td>
 
                         {/* Role Selector */}
@@ -573,6 +636,15 @@ export default function AdminStaffManagementPage() {
                         {/* Actions */}
                         <td className="py-3 px-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => openEditModal(staff)}
+                              title="Edit Admin Profile & Credentials"
+                              className="px-2 py-1 rounded-lg text-xs font-semibold border border-primary/30 hover:bg-primary/10 text-primary flex items-center gap-1 cursor-pointer transition-colors"
+                            >
+                              <Edit className="h-3 w-3" />
+                              <span>Edit</span>
+                            </button>
+
                             <button
                               onClick={() => {
                                 setResetTargetUser(staff);
@@ -747,6 +819,146 @@ export default function AdminStaffManagementPage() {
                 className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:opacity-90 disabled:opacity-50"
               >
                 {isResetting ? "Updating..." : "Update Password"}
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Super Admin Edit Staff Member Dialog */}
+      <Dialog
+        open={!!editTargetUser}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditTargetUser(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit Admin Member Profile & Access
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Super Admin Master Control: Update name, email, phone, role, status and avatar.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveStaffEdit} className="space-y-4 pt-2">
+            {/* Avatar Upload for Staff */}
+            <div className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 border border-border/80">
+              <Avatar className="h-16 w-16 rounded-xl border border-border">
+                <AvatarImage src={editFormData.avatarUrl} alt={editFormData.name} className="object-cover" />
+                <AvatarFallback className="rounded-xl font-bold text-sm bg-primary/10 text-primary">
+                  {editFormData.name.slice(0, 2).toUpperCase() || "AD"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <label className="block text-xs font-semibold mb-1 text-foreground">
+                  Profile Picture (Cloudinary)
+                </label>
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-background hover:bg-muted text-xs font-medium cursor-pointer transition-colors">
+                  {isAvatarUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
+                  <span>{isAvatarUploading ? "Uploading..." : "Upload New Picture"}</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={isAvatarUploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setIsAvatarUploading(true);
+                      try {
+                        const url = await adminStaffService.uploadAvatar(file);
+                        setEditFormData((prev) => ({ ...prev, avatarUrl: url }));
+                        toast.success("Picture uploaded!");
+                      } catch (err: any) {
+                        toast.error(err.message || "Upload failed");
+                      } finally {
+                        setIsAvatarUploading(false);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold mb-1 text-foreground">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs focus:ring-2 focus:ring-primary outline-hidden"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1 text-foreground">Email / User ID *</label>
+                <input
+                  type="email"
+                  required
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs focus:ring-2 focus:ring-primary outline-hidden font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1 text-foreground">Phone Number</label>
+                <input
+                  type="text"
+                  placeholder="+8801700000000"
+                  value={editFormData.phone}
+                  onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs focus:ring-2 focus:ring-primary outline-hidden font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1 text-foreground">Account Status</label>
+                <select
+                  value={editFormData.status}
+                  onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value as any })}
+                  className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs focus:ring-2 focus:ring-primary outline-hidden cursor-pointer"
+                >
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="SUSPENDED">SUSPENDED</option>
+                  <option value="BLOCKED">BLOCKED</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold mb-1 text-foreground">Assigned Role</label>
+              <select
+                value={editFormData.role}
+                onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value as AdminRole })}
+                className="w-full px-3 py-2 rounded-xl bg-muted/40 border border-border text-xs focus:ring-2 focus:ring-primary outline-hidden cursor-pointer"
+              >
+                {Object.entries(ROLE_INFO).map(([k, v]) => (
+                  <option key={k} value={k}>
+                    {v.label} — {v.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-border">
+              <button
+                type="button"
+                onClick={() => setEditTargetUser(null)}
+                className="px-3 py-2 rounded-xl border border-border text-xs font-medium hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isEditingSaving || isAvatarUploading}
+                className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:opacity-90 disabled:opacity-50"
+              >
+                {isEditingSaving ? "Saving..." : "Save Member Changes"}
               </button>
             </div>
           </form>

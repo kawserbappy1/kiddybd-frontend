@@ -156,6 +156,7 @@ export interface AdminStaffUser {
   name: string;
   email: string | null;
   phone: string | null;
+  avatarUrl?: string | null;
   role: AdminRole;
   status: "ACTIVE" | "SUSPENDED" | "BLOCKED" | "DELETED";
   createdAt: string;
