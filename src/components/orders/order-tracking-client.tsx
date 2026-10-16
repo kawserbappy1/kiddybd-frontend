@@ -99,7 +99,8 @@ export function OrderTrackingClient({ order: initialOrder }: OrderTrackingClient
   React.useEffect(() => {
     async function syncLiveOrderStatus() {
       try {
-        const res = await fetch(`http://localhost:5000/api/v1/orders/track/${initialOrder.orderNumber}`, {
+        const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
+        const res = await fetch(`${backendUrl}/orders/track/${initialOrder.orderNumber}`, {
           cache: "no-store",
         });
         if (res.ok) {

@@ -91,7 +91,7 @@ export const authService = {
 
   // Google OAuth URL helper
   getGoogleAuthUrl(): string {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
     return `${baseUrl}/auth/google`;
   },
 };

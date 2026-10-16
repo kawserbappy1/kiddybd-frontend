@@ -36,7 +36,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   if (!categoryName) {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
       const res = await fetch(`${backendUrl}/categories`, { next: { revalidate: 60 } });
       if (res.ok) {
         const data = await res.json();

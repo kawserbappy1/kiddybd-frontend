@@ -93,7 +93,7 @@ function mapDbProductToCatalog(p: any): any {
 
 async function getDbProducts(): Promise<any[]> {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
     const res = await fetch(`${backendUrl}/products`, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
@@ -108,7 +108,7 @@ async function getDbProducts(): Promise<any[]> {
 
 async function resolveProduct(slug: string): Promise<any> {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
     const res = await fetch(`${backendUrl}/products/${slug}`, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();

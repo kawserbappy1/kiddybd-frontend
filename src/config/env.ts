@@ -4,7 +4,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_API_URL: z
     .string()
     .url()
-    .default("http://localhost:5000/api/v1"),
+    .default("https://kiddybd-backend.onrender.com/api/v1"),
   NEXT_PUBLIC_APP_NAME: z.string().default("KiddyBD"),
   NEXT_PUBLIC_CURRENCY_SYMBOL: z.string().default("৳"),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),

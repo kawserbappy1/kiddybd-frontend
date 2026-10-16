@@ -81,7 +81,8 @@ function ReturnsContent() {
 
     try {
       // 1. Fetch live order details from backend
-      const res = await fetch(`http://localhost:5000/api/v1/orders/track/${orderNum}`);
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
+      const res = await fetch(`${backendUrl}/orders/track/${orderNum}`);
       if (res.ok) {
         const json = await res.json();
         if (json.success && json.data) {
@@ -93,7 +94,7 @@ function ReturnsContent() {
       }
 
       // 2. Fetch existing returns for this order
-      const retRes = await fetch(`http://localhost:5000/api/v1/returns/order/${orderNum}`);
+      const retRes = await fetch(`${backendUrl}/returns/order/${orderNum}`);
       if (retRes.ok) {
         const retJson = await retRes.json();
         if (retJson.success && Array.isArray(retJson.data)) {
@@ -168,7 +169,8 @@ function ReturnsContent() {
           : undefined,
       };
 
-      const res = await fetch("http://localhost:5000/api/v1/returns", {
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
+      const res = await fetch(`${backendUrl}/returns`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -477,7 +479,8 @@ function ReturnsContent() {
                         formData.append("file", file);
                         formData.append("image", file);
 
-                        const res = await fetch("http://localhost:5000/api/v1/upload?folder=returns", {
+                        const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://kiddybd-backend.onrender.com/api/v1";
+                        const res = await fetch(`${backendUrl}/upload?folder=returns`, {
                           method: "POST",
                           body: formData,
                         });
