@@ -73,14 +73,28 @@ export const adminStaffService = {
     return this.updateStaffProfile(id, { role, status, password });
   },
 
-  async updateMyProfile(data: { name?: string; avatarUrl?: string }): Promise<ApiResponse<any>> {
+  async updateMyProfile(data: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    password?: string;
+    avatarUrl?: string;
+  }): Promise<ApiResponse<any>> {
     try {
       const res = await apiClient.patch<ApiResponse<any>>("/users/profile", data);
       return res.data;
     } catch (err: any) {
+      console.error("updateMyProfile error:", err);
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        (Array.isArray(err?.response?.data?.error?.details)
+          ? err?.response?.data?.error?.details.map((d: any) => d.message || d).join(", ")
+          : undefined) ||
+        "Failed to update profile";
       return {
         success: false,
-        message: err?.response?.data?.message || "Failed to update profile",
+        message: msg,
         data: null as any,
       };
     }
