@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ChevronDown, Copy, Check } from "lucide-react";
+import { ChevronDown, Copy, Check, PhoneCall } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { couponService, type BannerCoupon } from "@/services/coupon.service";
+import { settingsService } from "@/services/settings.service";
 import { toast } from "sonner";
 
 export function TopAnnouncementBar() {
   const [currency, setCurrency] = useState("BDT ৳");
   const [bannerCoupon, setBannerCoupon] = useState<BannerCoupon | null>(null);
+  const [contactPhone, setContactPhone] = useState("+880 1893-590140");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -26,6 +28,13 @@ export function TopAnnouncementBar() {
       }
     }
     loadBanner();
+
+    settingsService.getSettings().then((res) => {
+      if (isMounted && res.data?.contactPhone) {
+        setContactPhone(res.data.contactPhone);
+      }
+    });
+
     return () => {
       isMounted = false;
     };
@@ -88,7 +97,18 @@ export function TopAnnouncementBar() {
         </div>
 
         {/* Right Links & Selectors */}
-        <div className="flex items-center gap-2 sm:gap-4 shrink-0 text-slate-900 text-xs font-medium">
+        <div className="flex items-center gap-2 sm:gap-3.5 shrink-0 text-slate-900 text-xs font-medium">
+          {/* Customer Support Hotline */}
+          <a
+            href={`tel:${contactPhone.replace(/\s+/g, "")}`}
+            className="inline-flex items-center gap-1.5 font-bold hover:text-slate-950 transition-colors py-0.5 text-[11px] sm:text-xs"
+            title="Call KiddyBD Helpline"
+          >
+            <PhoneCall className="w-3 h-3 text-slate-900" />
+            <span className="font-semibold text-slate-950">{contactPhone}</span>
+          </a>
+          <span className="hidden sm:inline text-slate-700/60">|</span>
+
           <Link
             href="/track-order"
             className="hidden sm:inline hover:underline transition-all"
