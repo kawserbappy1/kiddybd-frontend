@@ -18,6 +18,28 @@ import { Input } from "@/components/ui/input";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false);
+  const [settings, setSettings] = React.useState({
+    contactPhone: "+880 1893-590140",
+    contactEmail: "kiddybd1@gmail.com",
+    contactAddress: "হাউজ ১২, রোড ৪, ব্লক-সি, বনশ্রী, ঢাকা - ১২১৯, বাংলাদেশ।",
+  });
+
+  React.useEffect(() => {
+    import("@/services/settings.service").then(({ settingsService }) => {
+      settingsService.getSettings().then((res) => {
+        if (res.data) {
+          setSettings((prev) => ({
+            ...prev,
+            contactPhone: res.data.contactPhone || prev.contactPhone,
+            contactEmail: res.data.contactEmail || prev.contactEmail,
+            contactAddress: res.data.contactAddress || prev.contactAddress,
+          }));
+        }
+      });
+    });
+  }, []);
+
+  const cleanWaNumber = settings.contactPhone.replace(/[^0-9]/g, "");
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] dark:bg-slate-950 py-8 sm:py-12 transition-colors">
@@ -66,7 +88,7 @@ export default function ContactPage() {
               ফোন হটলাইন
             </h3>
             <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              +880 1700-000001
+              {settings.contactPhone}
             </p>
             <p className="font-bengali text-[11px] text-slate-400">
               সকাল ৯টা থেকে রাত ১০টা পর্যন্ত
@@ -81,7 +103,7 @@ export default function ContactPage() {
               হোয়াটসঅ্যাপ চ্যাট
             </h3>
             <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              +880 1700-000001
+              {settings.contactPhone}
             </p>
             <p className="font-bengali text-[11px] text-slate-400">
               দ্রুত রিপ্লাই ও ২৪/৭ সহায়তা
@@ -96,7 +118,7 @@ export default function ContactPage() {
               ইমেইল সাপোর্ট
             </h3>
             <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              support@kiddybd.com
+              {settings.contactEmail}
             </p>
             <p className="font-bengali text-[11px] text-slate-400">
               ১২ ঘণ্টার মধ্যে উত্তর প্রদান
@@ -116,7 +138,7 @@ export default function ContactPage() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 <span>
-                  <strong>হেড অফিস:</strong> হাউজ ১২, রোড ৪, ব্লক-সি, বনশ্রী, ঢাকা - ১২১৯, বাংলাদেশ।
+                  <strong>হেড অফিস:</strong> {settings.contactAddress}
                 </span>
               </div>
               <div className="flex items-start gap-3">
@@ -129,7 +151,7 @@ export default function ContactPage() {
 
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
               <Link
-                href="https://wa.me/8801700000001"
+                href={`https://wa.me/${cleanWaNumber || "8801893590140"}`}
                 target="_blank"
                 className="w-full py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-all font-bengali"
               >

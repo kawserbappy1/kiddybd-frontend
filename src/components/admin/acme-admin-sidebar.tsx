@@ -125,7 +125,7 @@ const mainNavItems: NavItem[] = [
 const secondaryNavItems: NavItem[] = [
   {
     title: "Settings",
-    href: "/admin#settings",
+    href: "/admin/settings",
     icon: Settings,
   },
   {
