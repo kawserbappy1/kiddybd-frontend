@@ -153,7 +153,7 @@ export function AdminOrderDetailClient({ orderId }: { orderId: string }) {
         {/* Brand & Invoice Header */}
         <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
           <div>
-            <h1 className="text-2xl font-black tracking-tight">KIDDOJOY</h1>
+            <h1 className="text-2xl font-black tracking-tight">KiddyBD</h1>
             <p className="text-xs text-gray-600 mt-0.5">Kids & Toys Ecommerce BD</p>
           </div>
           <div className="text-right">
@@ -242,7 +242,7 @@ export function AdminOrderDetailClient({ orderId }: { orderId: string }) {
 
         {/* Packing Slip Footer */}
         <div className="border-t border-gray-300 pt-4 text-center text-[10px] text-gray-500">
-          Thank you for shopping with KiddoJoy! For support or inquiries, visit kiddojoy.com or contact customer care.
+          Thank you for shopping with KiddyBD! For support or inquiries, visit kiddybd.com or contact customer care.
         </div>
       </div>
 
